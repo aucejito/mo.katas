@@ -1,6 +1,6 @@
 import unittest
 
-from rover import Rover
+from rover import Rover, Grid
 
 
 """
@@ -22,24 +22,36 @@ Mars rover moves through
 
 class MarsRoverTestCase(unittest.TestCase):
     def test_rover_move_forward(self):
+        
+        
         rover = Rover(
-            start_x=1,
-            start_y=1,
-            orientation='N'
+            start_x=0,
+            start_y=2,
+            orientation='N',
+            grid=Grid(3,3)
         )
 
         movements = ['f']
-        expected_position = (1, 2)
+        
         rover.move(movements)
 
+        turns = ["l"]
+        rover.rotate(turns)
+
+        rover.move(movements)
+
+        expected_position = (2, 0)
         self.assert_rover_position(expected_position, rover)
        
+
     def test_rover_rotate(self):
         rover = Rover(
             start_x=1,
             start_y=1,
-            orientation='W'
+            orientation='W',
+            grid=Grid(3,3)
         )
+
         turns = ["r","r"]
         rover.rotate(turns)
         expected_orientation = "E"
