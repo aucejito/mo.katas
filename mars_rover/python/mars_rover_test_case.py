@@ -1,6 +1,7 @@
 import unittest
 
-from rover import Rover, Grid
+from rover import Rover
+from grid import Grid
 
 
 """
@@ -18,43 +19,142 @@ Mars rover moves through
                        S
                    
 """
-
-
+"""He organizado cada test en 3 fases (Arrange, Act, Assert)
+    1. Arrange: se crean las dependencias y el estado inicial para el test
+    2. Act: se llama al método o propiedad que se testea
+    3. Assert: se comprueban que los resultados observados son correctos
+"""
 class MarsRoverTestCase(unittest.TestCase):
     def test_rover_move_forward(self):
-        
-        
+        #Arrange
         rover = Rover(
             start_x=0,
             start_y=2,
             orientation='N',
             grid=Grid(3,3)
         )
+        movements = ['f','f']
+        expected_position = (0, 1)
 
-        movements = ['f']
+        #Act
+        rover.move(movements)
         
-        rover.move(movements)
-
-        turns = ["l"]
-        rover.rotate(turns)
-
-        rover.move(movements)
-
-        expected_position = (2, 0)
+        #Assert
         self.assert_rover_position(expected_position, rover)
-       
 
-    def test_rover_rotate(self):
+    def test_rover_move_backward(self):
         rover = Rover(
-            start_x=1,
-            start_y=1,
+            start_x=0,
+            start_y=2,
+            orientation='N',
+            grid=Grid(3,3)
+        )
+        movements = ['b','b']
+        expected_position = (0, 0)
+
+        rover.move(movements)
+
+        self.assert_rover_position(expected_position, rover)   
+
+    def test_rover_rotate_right(self):
+        rover = Rover(
+            start_x=0,
+            start_y=0,
             orientation='W',
             grid=Grid(3,3)
         )
+        turns = ["r"]
+        expected_orientation = "N"
 
-        turns = ["r","r"]
-        rover.rotate(turns)
-        expected_orientation = "E"
+        rover.move(turns)
+
+        self.assert_rover_orientation(expected_orientation, rover)
+
+    def test_rover_rotate_left(self):
+        rover = Rover(
+            start_x=0,
+            start_y=0,
+            orientation='N',
+            grid=Grid(3,3)
+        )
+        turns = ["l"]
+        expected_orientation = "W"
+
+        rover.move(turns)
+
+        self.assert_rover_orientation(expected_orientation, rover)
+
+
+    def test_spheric_planets_N_to_S(self):
+        rover = Rover(
+            start_x=0,
+            start_y=2,
+            orientation='N',
+            grid=Grid(3,3)
+        )
+        movements = ['f']
+        expected_position = (0, 0)
+
+        rover.move(movements)
+        
+        self.assert_rover_position(expected_position, rover)
+
+    def test_spheric_planets_S_to_N(self):
+        rover = Rover(
+            start_x=0,
+            start_y=0,
+            orientation='N',
+            grid=Grid(3,3)
+        )
+        movements = ['b']
+        expected_position = (0,2)
+
+        rover.move(movements)
+        
+        self.assert_rover_position(expected_position, rover)
+
+    def test_spheric_planets_E_to_W(self):
+        rover = Rover(
+            start_x=0,
+            start_y=0,
+            orientation='W',
+            grid=Grid(3,3)
+        )
+        movements = ['f']
+        expected_position = (2,0)
+
+        rover.move(movements)
+        
+        self.assert_rover_position(expected_position, rover)
+
+    def test_spheric_planets_W_to_E(self):
+        rover = Rover(
+            start_x=2,
+            start_y=0,
+            orientation='E',
+            grid=Grid(3,3)
+        )
+        movements = ['f']
+        expected_position = (0,0)
+
+        rover.move(movements)
+        
+        self.assert_rover_position(expected_position, rover)
+
+    def test_detect_obstacle(self):
+        rover = Rover(
+            start_x=0,
+            start_y=0,
+            orientation='N',
+            grid=Grid(3,3, "Mars", [(1,1)]) #Un obstáculo en la coordenada (1,1)
+        )
+        movements = ["r","f","l","f","r","b"]
+        expected_position = (1, 0)
+        expected_orientation = "N"
+
+        rover.move(movements)
+        
+        self.assert_rover_position(expected_position, rover) #Comprobamos que vuelve a la posición anterior posible
         self.assert_rover_orientation(expected_orientation, rover)
 
     def assert_rover_position(self, expected_position, rover):
