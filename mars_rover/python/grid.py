@@ -1,7 +1,7 @@
 class Grid(object):
     size_x = 0
     size_y = 0
-    obstacles = [(0,1)]
+    obstacles = []
     name = ""
 
     def __init__(self, size_x, size_y, name="Mars", obstacles=[]):

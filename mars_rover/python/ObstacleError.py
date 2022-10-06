@@ -6,7 +6,5 @@ class ObstacleError(Exception):
         self.position = position
         super().__init__(args)
         
-        
-    
     def __str__(self):
         return f'Rover has detected an obstacle at {self.position}'

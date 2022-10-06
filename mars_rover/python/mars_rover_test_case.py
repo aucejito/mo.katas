@@ -33,8 +33,8 @@ class MarsRoverTestCase(unittest.TestCase):
             orientation='N',
             grid=Grid(3,3)
         )
-        movements = ['f','f']
-        expected_position = (0, 1)
+        movements = ['f']
+        expected_position = (0, 0)
 
         #Act
         rover.move(movements)
@@ -49,8 +49,8 @@ class MarsRoverTestCase(unittest.TestCase):
             orientation='N',
             grid=Grid(3,3)
         )
-        movements = ['b','b']
-        expected_position = (0, 0)
+        movements = ['b']
+        expected_position = (0, 1)
 
         rover.move(movements)
 
@@ -146,15 +146,63 @@ class MarsRoverTestCase(unittest.TestCase):
             start_x=0,
             start_y=0,
             orientation='N',
-            grid=Grid(3,3, "Mars", [(1,1)]) #Un obstáculo en la coordenada (1,1)
+            grid=Grid(3,3, "Mars", [(0,1)]) #Un obstáculo en la coordenada (1,1)
         )
-        movements = ["r","f","l","f","r","b"]
-        expected_position = (1, 0)
+        movements = ["f","r","f"]
+        expected_position = (0, 0)
         expected_orientation = "N"
 
         rover.move(movements)
         
         self.assert_rover_position(expected_position, rover) #Comprobamos que vuelve a la posición anterior posible
+        self.assert_rover_orientation(expected_orientation, rover)
+
+    def test_detect_initial_obstacle(self):
+        rover = Rover(
+            start_x=0,
+            start_y=0,
+            orientation='N',
+            grid=Grid(3,3, "Mars", [(0,0)]) #Un obstáculo en la coordenada (0,0)
+        )
+        movements = ["f"]
+        expected_position = (0, 0) #Al haber un obstáculo en la pos. inicial se queda donde está
+        expected_orientation = "N"
+
+        rover.move(movements)
+        
+        self.assert_rover_position(expected_position, rover)
+        self.assert_rover_orientation(expected_orientation, rover)
+
+    def test_array_of_commands(self):
+        rover = Rover(
+            start_x=0,
+            start_y=0,
+            orientation='N',
+            grid=Grid(3,3)
+        )
+        movements = ["f","r","f","f", "l", "f"]
+        expected_position = (2,2) 
+        expected_orientation = "N"
+
+        rover.move(movements)
+        
+        self.assert_rover_position(expected_position, rover)
+        self.assert_rover_orientation(expected_orientation, rover)
+
+    def test_unknown_command(self):
+        rover = Rover(
+            start_x=0,
+            start_y=0,
+            orientation='N',
+            grid=Grid(3,3)
+        )
+        movements = ["j", "f"]
+        expected_position = (0,0) 
+        expected_orientation = "N"
+
+        rover.move(movements)
+        
+        self.assert_rover_position(expected_position, rover)
         self.assert_rover_orientation(expected_orientation, rover)
 
     def assert_rover_position(self, expected_position, rover):
