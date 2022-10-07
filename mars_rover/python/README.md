@@ -20,5 +20,5 @@ Project has been started by a junior team mate and not the best programming prac
 
 On the project root:
 ```
-python -m unittest mars_rover_test_case
+python -m unittest mars_rover_test_case -v
 ```
